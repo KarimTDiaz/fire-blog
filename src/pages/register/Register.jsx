@@ -1,7 +1,9 @@
 import { auth } from '../../config/firebase.config';
 import { fillData } from '../../utils/fillData';
-import { useState } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../contexts/Auth.context';
 
 const Register = () => {
 	const [registerData, setRegisterData] = useState({
@@ -9,6 +11,12 @@ const Register = () => {
 		password: '',
 		confirm: ''
 	});
+	const navigate = useNavigate();
+	const { currentUser } = useContext(AuthContext);
+	useEffect(() => {
+		if (currentUser) navigate('/');
+	}, [currentUser]);
+
 	return (
 		<>
 			<h1>Register</h1>
@@ -67,5 +75,6 @@ const handleSubmit = async (registerData, ev) => {
 	} catch (err) {
 		console.log(err);
 	}
+	ev.target.reset();
 };
 export default Register;
