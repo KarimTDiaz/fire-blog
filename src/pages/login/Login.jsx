@@ -10,7 +10,6 @@ import { auth } from '../../config/firebase.config';
 import { SignInButton, SignInIcon, LoginContainer } from './styles';
 import { AuthContext } from '../../contexts/Auth.context';
 import { useNavigate } from 'react-router-dom';
-import { redirect } from 'react-router-dom';
 
 const Login = () => {
 	const [loginData, setLoginData] = useState({
@@ -18,12 +17,9 @@ const Login = () => {
 		password: ''
 	});
 	const [error, setError] = useState(false);
-
 	const { currentUser } = useContext(AuthContext);
+
 	const navigate = useNavigate();
-	if (currentUser) {
-		redirect('/');
-	}
 	useEffect(() => {
 		if (currentUser) {
 			navigate('/');
@@ -76,7 +72,6 @@ const handleSubmit = async (ev, loginData, setError) => {
 	const { email, password } = loginData;
 	try {
 		await signInWithEmailAndPassword(auth, email, password);
-		console.log(loginData);
 		setError(false);
 	} catch (err) {
 		console.log(err);
