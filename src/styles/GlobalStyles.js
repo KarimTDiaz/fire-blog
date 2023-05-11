@@ -20,6 +20,7 @@ a {
   }
 body {
 	margin: 0;
+	padding:2rem;
     max-width: 100vw;
     margin-left: auto;
     margin-right: auto;

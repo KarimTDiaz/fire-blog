@@ -1,6 +1,7 @@
 import { doc, updateDoc } from 'firebase/firestore';
 import { useState } from 'react';
 import { blogCollectionReference } from '../../config/firebase.config';
+import Upload from '../upload/Upload';
 
 const Edit = ({ id, setContent, post }) => {
 	const [editPost, setEditPost] = useState(post);
@@ -30,6 +31,9 @@ const Edit = ({ id, setContent, post }) => {
 						id='texto'
 						value={editPost.texto}
 					/>
+				</div>
+				<div>
+					<Upload setPost={setEditPost} post={editPost} />
 				</div>
 				<button>EDIT</button>
 			</form>

@@ -3,7 +3,7 @@ import { blogCollectionReference } from '../../config/firebase.config';
 import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { AuthContext } from '../../contexts/Auth.context';
 import Modal from '../../components/modal/Modal';
-
+import { StyledPost } from './styles';
 import Delete from '../../components/delete/Delete';
 import Edit from '../../components/edit/Edit';
 
@@ -27,10 +27,11 @@ const Home = () => {
 		<>
 			<div>
 				{posts.map(post => (
-					<div key={post.id}>
-						<button onClick={() => getPostById(post.id)}>buton</button>
+					<StyledPost key={post.id}>
 						<h1>{post.title}</h1>
 						<p>{post.texto}</p>
+						<img src={post.image} alt='' />
+						<button onClick={() => getPostById(post.id)}>Details</button>
 						{currentUser && currentUser.email === post.userEmail && (
 							<>
 								<button
@@ -55,7 +56,7 @@ const Home = () => {
 								</button>
 							</>
 						)}
-					</div>
+					</StyledPost>
 				))}
 				<Modal>{content}</Modal>
 			</div>

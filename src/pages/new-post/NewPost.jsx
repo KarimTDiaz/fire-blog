@@ -3,6 +3,8 @@ import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../contexts/Auth.context';
 import { addDoc } from 'firebase/firestore';
 import { blogCollectionReference } from '../../config/firebase.config';
+import Upload from '../../components/upload/Upload';
+import { IMAGES_URLS } from '../../constants/images-urls';
 
 const NewPost = () => {
 	const navigate = useNavigate();
@@ -10,7 +12,8 @@ const NewPost = () => {
 	const [newPost, setNewPost] = useState({
 		title: '',
 		texto: '',
-		userEmail: currentUser.email
+		userEmail: currentUser.email,
+		image: IMAGES_URLS.DEFAULT
 	});
 	useEffect(() => {
 		if (!currentUser) navigate('/');
@@ -20,7 +23,7 @@ const NewPost = () => {
 		<>
 			<h1>New Post</h1>
 			<div>
-				<form onSubmit={ev => createPost(ev, newPost)}>
+				<form onSubmit={ev => createPost(ev, newPost, navigate)}>
 					<div>
 						<label htmlFor='title'>Title</label>
 						<input
@@ -41,6 +44,9 @@ const NewPost = () => {
 							id='text'
 						/>
 					</div>
+					<div>
+						<Upload setPost={setNewPost} post={newPost}></Upload>
+					</div>
 					<button>Create Post</button>
 				</form>
 			</div>
@@ -48,7 +54,7 @@ const NewPost = () => {
 	);
 };
 
-const createPost = async (ev, newPost) => {
+const createPost = async (ev, newPost, navigate) => {
 	ev.preventDefault();
 	try {
 		await addDoc(blogCollectionReference, {
@@ -59,6 +65,7 @@ const createPost = async (ev, newPost) => {
 		console.log(err);
 	}
 	ev.target.reset();
+	navigate('/');
 };
 
 export default NewPost;
