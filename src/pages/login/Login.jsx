@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState } from 'react';
 import { fillData } from '../../utils/fillData';
 import {
 	signInWithEmailAndPassword,
@@ -17,14 +17,6 @@ const Login = () => {
 		password: ''
 	});
 	const [error, setError] = useState(false);
-	const { currentUser } = useContext(AuthContext);
-
-	const navigate = useNavigate();
-	useEffect(() => {
-		if (currentUser) {
-			navigate('/');
-		}
-	}, [currentUser]);
 
 	return (
 		<>
