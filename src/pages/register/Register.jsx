@@ -1,16 +1,30 @@
-import { auth } from '../../config/firebase.config';
-import { fillData } from '../../utils/fillData';
-import { useState, useContext, useEffect } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Button from '../../components/button/Button';
+import ErrorPopUp from '../../components/error-pop-up/ErrorPopUp';
+import Title from '../../components/title/Title';
+import { auth } from '../../config/firebase.config';
+import { BUTTONS } from '../../constants/buttons';
 import { AuthContext } from '../../contexts/Auth.context';
+import { fillData } from '../../utils/fillData';
+import {
+	RegisterContainer,
+	RegisterForm,
+	RegisterFormField,
+	RegisterInput,
+	RegisterLabel
+} from './styles';
 
 const Register = () => {
 	const [registerData, setRegisterData] = useState({
 		email: '',
 		password: '',
-		confirm: ''
+		confirm: '',
+		userName: ''
 	});
+	const [error, setError] = useState(null);
+
 	const navigate = useNavigate();
 	const { currentUser } = useContext(AuthContext);
 	useEffect(() => {
@@ -19,59 +33,90 @@ const Register = () => {
 
 	return (
 		<>
-			<h1>Register</h1>
-			<form onSubmit={ev => handleSubmit(registerData, ev)}>
-				<div>
-					<label htmlFor='email'>Email</label>
-					<input
-						type='text'
-						id='email'
-						onChange={ev =>
-							fillData(registerData, setRegisterData, ev.target.value, 'email')
-						}
-					/>
-				</div>
-				<div>
-					<label htmlFor='password'>Password</label>
-					<input
-						type='text'
-						id='password'
-						onChange={ev =>
-							fillData(
-								registerData,
-								setRegisterData,
-								ev.target.value,
-								'password'
-							)
-						}
-					/>
-				</div>
-				<div>
-					<label htmlFor='confirm'>Confirm password</label>
-					<input
-						type='text'
-						id='confirm'
-						onChange={ev =>
-							fillData(
-								registerData,
-								setRegisterData,
-								ev.target.value,
-								'confirm'
-							)
-						}
-					/>
-				</div>
-				<button>Sign up</button>
-			</form>
+			<RegisterContainer>
+				<RegisterForm onSubmit={ev => handleSubmit(ev, registerData, setError)}>
+					<Title>REGISTRO</Title>
+					<RegisterFormField>
+						<RegisterLabel htmlFor='userName'>User Name</RegisterLabel>
+						<RegisterInput
+							type='text'
+							id='userName'
+							onChange={ev =>
+								fillData(
+									registerData,
+									setRegisterData,
+									ev.target.value,
+									'userName'
+								)
+							}
+						/>
+					</RegisterFormField>
+					<RegisterFormField>
+						<RegisterLabel htmlFor='email'>Email</RegisterLabel>
+						<RegisterInput
+							type='email'
+							id='email'
+							onChange={ev =>
+								fillData(
+									registerData,
+									setRegisterData,
+									ev.target.value,
+									'email'
+								)
+							}
+						/>
+					</RegisterFormField>
+					<RegisterFormField>
+						<RegisterLabel htmlFor='password'>Password</RegisterLabel>
+						<RegisterInput
+							type='password'
+							id='password'
+							onChange={ev =>
+								fillData(
+									registerData,
+									setRegisterData,
+									ev.target.value,
+									'password'
+								)
+							}
+						/>
+					</RegisterFormField>
+					<RegisterFormField>
+						<RegisterLabel htmlFor='confirm'>Confirm password</RegisterLabel>
+						<RegisterInput
+							type='password'
+							id='confirm'
+							onChange={ev =>
+								fillData(
+									registerData,
+									setRegisterData,
+									ev.target.value,
+									'confirm'
+								)
+							}
+						/>
+					</RegisterFormField>
+					{error && <ErrorPopUp>{error}</ErrorPopUp>}
+					<Button type={BUTTONS.PRIMARY}>Sign up</Button>
+				</RegisterForm>
+			</RegisterContainer>
 		</>
 	);
 };
 
-const handleSubmit = async (registerData, ev) => {
+const handleSubmit = async (ev, registerData, setError) => {
 	ev.preventDefault();
-	const { email, password } = registerData;
+	const { userName, email, password, confirm } = registerData;
+	if (password !== confirm) {
+		setError('Las contraseñas no coinciden');
+	}
+
 	try {
 		await createUserWithEmailAndPassword(auth, email, password);
+		await updateProfile(auth.currentUser, {
+			displayName: userName
+		});
+		await getIdToken(auth.currentUser, true);
 	} catch (err) {
 		console.log(err);
 	}

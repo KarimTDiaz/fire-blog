@@ -1,14 +1,14 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { AuthContext } from '../contexts/Auth.context';
 import Layout from '../layouts/Layouts';
+import Edit from '../pages/edit/Edit';
 import Home from '../pages/home/Home';
 import Login from '../pages/login/Login';
-import Register from '../pages/register/Register';
 import NewPost from '../pages/new-post/NewPost';
 import Profile from '../pages/profile/Profile';
-import AllowedRoute from './AllowedRoute';
+import Register from '../pages/register/Register';
 import ProtectedRoute from './ProtectedRoute';
-import { useContext } from 'react';
-import { AuthContext } from '../contexts/Auth.context';
 
 const Router = () => {
 	const { currentUser } = useContext(AuthContext);
@@ -31,6 +31,14 @@ const Router = () => {
 					element={
 						<ProtectedRoute>
 							<Profile />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path='/edit'
+					element={
+						<ProtectedRoute>
+							<Edit />
 						</ProtectedRoute>
 					}
 				/>

@@ -20,11 +20,32 @@ a {
   }
 body {
 	margin: 0;
-	padding:2rem;
-    max-width: 100vw;
+    max-width:1440px;
     margin-left: auto;
     margin-right: auto;
 	font-family: 'Inter', sans-serif;
+}
+
+select {
+  // A reset of styles, including removing the default dropdown arrow
+  /* appearance: none; */
+  background-color: transparent;
+  border: none;
+  padding: 0 1em 0 0;
+  margin: 0;
+  width: 100%;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: inherit;
+  line-height: inherit;
+
+  // Stack above custom arrow
+  z-index: 1;
+
+ 
+
+  // Remove focus outline, will add on alternate element
+  outline: none;
 }
 `;
 

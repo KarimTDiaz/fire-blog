@@ -1,15 +1,19 @@
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Button from '../../components/button/Button';
+import SocialLogin from '../../components/social-log-in/SocialLogin';
+import Title from '../../components/title/Title';
+import { auth } from '../../config/firebase.config';
+import { BUTTONS } from '../../constants/buttons';
 import { fillData } from '../../utils/fillData';
 import {
-	signInWithEmailAndPassword,
-	GoogleAuthProvider,
-	signInWithPopup,
-	GithubAuthProvider
-} from 'firebase/auth';
-import { auth } from '../../config/firebase.config';
-import { SignInButton, SignInIcon, LoginContainer } from './styles';
-import { AuthContext } from '../../contexts/Auth.context';
-import { useNavigate } from 'react-router-dom';
+	LoginContainer,
+	LoginForm,
+	LoginFormField,
+	LoginInput,
+	LoginLabel
+} from './styles';
 
 const Login = () => {
 	const [loginData, setLoginData] = useState({
@@ -18,41 +22,37 @@ const Login = () => {
 	});
 	const [error, setError] = useState(false);
 
+	const navigate = useNavigate();
+
 	return (
 		<>
 			<LoginContainer>
-				<h1>Login</h1>
-				<form onSubmit={ev => handleSubmit(ev, loginData, setError)}>
-					<div>
-						<label htmlFor='email'>Email</label>
-						<input
+				<LoginForm onSubmit={ev => handleSubmit(ev, loginData, setError)}>
+					<Title>SIGN IN</Title>
+					<LoginFormField>
+						<LoginLabel htmlFor='email'>Email</LoginLabel>
+						<LoginInput
 							type='text'
 							id='email'
 							onChange={ev =>
 								fillData(loginData, setLoginData, ev.target.value, 'email')
 							}
 						/>
-					</div>
-					<div>
-						<label htmlFor='password'>Password</label>
-						<input
+					</LoginFormField>
+					<LoginFormField>
+						<LoginLabel htmlFor='password'>Password</LoginLabel>
+						<LoginInput
 							type='password'
 							id='password'
 							onChange={ev =>
 								fillData(loginData, setLoginData, ev.target.value, 'password')
 							}
 						/>
-					</div>
-					<button>Sign in</button>
-					<SignInButton onClick={() => loginWithGoogle()}>
-						<SignInIcon src='/assets/icon-google.svg' alt='Icono de google' />
-						<p>Sign in with Google</p>
-					</SignInButton>
-					<SignInButton onClick={() => loginWithGithub()}>
-						<SignInIcon src='/assets/icon-github.svg' alt='Icono de github' />
-						<p>Sign in with Github</p>
-					</SignInButton>
-				</form>
+					</LoginFormField>
+
+					<Button type={BUTTONS.PRIMARY}>Sign in</Button>
+				</LoginForm>
+				<SocialLogin />
 				{error && <h1>Email o contraseña incorrectos</h1>}
 			</LoginContainer>
 		</>
@@ -70,28 +70,6 @@ const handleSubmit = async (ev, loginData, setError) => {
 		setError(true);
 	}
 	ev.target.reset();
-};
-
-const loginWithGoogle = async () => {
-	const provider = new GoogleAuthProvider();
-	try {
-		const result = await signInWithPopup(auth, provider);
-		const credential = GoogleAuthProvider.credentialFromResult(result);
-		console.log(credential);
-	} catch (err) {
-		console.log(err);
-	}
-};
-
-const loginWithGithub = async () => {
-	const provider = new GithubAuthProvider();
-	try {
-		const result = await signInWithPopup(auth, provider);
-		const credential = GithubAuthProvider.credentialFromResult(result);
-		console.log(credential);
-	} catch (err) {
-		console.log(err);
-	}
 };
 
 export default Login;

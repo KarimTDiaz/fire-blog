@@ -1,19 +1,28 @@
 import styled from 'styled-components';
+import { COLORS } from '../../constants/variables';
 
 const LoginContainer = styled.div`
+	padding-top: 5rem;
+`;
+const LoginForm = styled.form`
+	padding: 0 3rem;
+`;
+
+const LoginFormField = styled.div`
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+	margin-bottom: 1rem;
 `;
-const SignInButton = styled.div`
-	display: flex;
-	background-color: grey;
-	padding: 0.2rem;
+const LoginInput = styled.input`
+	padding: 0.3rem 0;
+	border: 1px solid ${COLORS.PRIMARY};
 	border-radius: 5px;
-	cursor: pointer;
+	&:-webkit-autofill,
+	&:-webkit-autofill:hover,
+	&:-webkit-autofill:focus {
+		-webkit-box-shadow: 0 0 0px 1000px #fff inset;
+	}
 `;
-const SignInIcon = styled.img`
-	width: 35px;
-`;
-export { LoginContainer, SignInButton, SignInIcon };
+const LoginLabel = styled.label``;
+
+export { LoginContainer, LoginForm, LoginFormField, LoginInput, LoginLabel };

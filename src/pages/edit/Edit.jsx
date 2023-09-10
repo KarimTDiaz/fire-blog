@@ -1,10 +1,13 @@
 import { doc, updateDoc } from 'firebase/firestore';
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import Upload from '../../components/upload/Upload';
 import { blogCollectionReference } from '../../config/firebase.config';
-import Upload from '../upload/Upload';
 
-const Edit = ({ id, setContent, post }) => {
-	const [editPost, setEditPost] = useState(post);
+const Edit = () => {
+	const { state } = useLocation();
+	console.log(state);
+	const [editPost, setEditPost] = useState(state);
 
 	return (
 		<>
@@ -18,7 +21,7 @@ const Edit = ({ id, setContent, post }) => {
 						}
 						type='text'
 						id='title'
-						value={editPost.title}
+						value={state.title}
 					/>
 				</div>
 				<div>
@@ -29,7 +32,7 @@ const Edit = ({ id, setContent, post }) => {
 						}
 						type='text'
 						id='texto'
-						value={editPost.texto}
+						value={state.texto}
 					/>
 				</div>
 				<div>
@@ -54,4 +57,5 @@ const updatePost = async (ev, id, newData) => {
 		console.error('Error al actualizar el documento', err);
 	}
 };
+
 export default Edit;
